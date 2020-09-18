@@ -66,6 +66,7 @@ LOG_LEVEL = 'WARNING'
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
    'scrapies.pipelines.ScrapiesPipeline': 300,
+   'scrapies.pipelines.AuthorPipeline': 300,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

@@ -10,3 +10,10 @@ class ScrapiesItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
     pass
+
+
+class AuthorItem(scrapy.Item):
+    name = scrapy.Field()
+    desc = scrapy.Field()
+    dynasty = scrapy.Field()
+    take_count = scrapy.Field()

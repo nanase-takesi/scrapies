@@ -11,3 +11,10 @@ from itemadapter import ItemAdapter
 class ScrapiesPipeline:
     def process_item(self, item, spider):
         return item
+
+
+class AuthorPipeline:
+    def process_item(self, item, spider):
+        if spider.name == 'shicimingju':
+            print(item)
+        return item
