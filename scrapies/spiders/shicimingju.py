@@ -32,7 +32,7 @@ class ShicimingjuSpider(scrapy.Spider):
         descs = about_author.xpath('.//div[@class="des"]//text()').extract()
         dynasty = about_author.xpath('.//div[@class="aside_left"]/div[@class="aside_val"]//text()').extract_first()
         take_count = about_author.xpath('.//div[@class="aside_right"]/div[@class="aside_val"]//text()').extract_first()
-        
+
         authorItem = AuthorItem()
         authorItem['name'] = name
         authorItem['desc'] = "".join(descs).strip()
