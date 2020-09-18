@@ -13,7 +13,9 @@ SPIDER_MODULES = ['scrapies.spiders']
 NEWSPIDER_MODULE = 'scrapies.spiders'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36'
+USER_AGENTS = [
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36',
+]
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
@@ -45,9 +47,10 @@ LOG_LEVEL = 'WARNING'
 
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
-# SPIDER_MIDDLEWARES = {
-#    'scrapies.middlewares.ScrapiesSpiderMiddleware': 543,
-# }
+SPIDER_MIDDLEWARES = {
+    'scrapies.middlewares.ScrapiesSpiderMiddleware': 543,
+    'scrapies.middlewares.RandomUserAgentMiddleware': 543,
+}
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
