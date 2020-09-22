@@ -6,14 +6,19 @@
 import scrapy
 
 
-class ScrapiesItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
-
-
 class AuthorItem(scrapy.Item):
+    id = scrapy.Field()
     name = scrapy.Field()
     desc = scrapy.Field()
     dynasty = scrapy.Field()
     take_count = scrapy.Field()
+
+
+class PoetryItem(scrapy.Item):
+    id = scrapy.Field()
+    title = scrapy.Field()
+    category_name = scrapy.Field()
+    dynasty = scrapy.Field()
+    author = scrapy.Field()
+    content = scrapy.Field()
+    shangxi_content = scrapy.Field()

@@ -1,6 +1,6 @@
 import scrapy
 from urllib import parse
-from scrapies.items import AuthorItem
+from scrapies.items import AuthorItem, PoetryItem
 
 
 class ShicimingjuSpider(scrapy.Spider):
@@ -9,24 +9,63 @@ class ShicimingjuSpider(scrapy.Spider):
     start_urls = ['http://www.shicimingju.com/']
 
     def parse(self, response):
-        yield scrapy.Request(url=parse.urljoin(response.url, '/category/all'), callback=self.parse_author_list, )
+        yield scrapy.Request(url=parse.urljoin(response.url, '/category/all', ), callback=self.parse_author_list, )
+        yield scrapy.Request(url=parse.urljoin(response.url, '/shicimark', ), callback=self.parse_category_list, )
+
+    def parse_category_list(self, response):
+        mark_cards = response.xpath('//div[@id="main_left"]//div[@class="mark_card"]')
+        for mark_card in mark_cards:
+            href = mark_card.xpath('./a/@href').extract_first()
+            name = mark_card.xpath('//div[@id="main_left"]/h1//text()').extract_first()
+            meta = {
+                'category_name': name,
+            }
+            yield scrapy.Request(url=parse.urljoin(response.url, href, ), meta=meta, callback=self.parse_poetry_list, )
+
+    def parse_poetry_list(self, response):
+        category_name = response.meta['category_name']
+        poetry_cards = response.xpath('//div[@id="main_left"]//div[@class="card shici_card"]/div[not(@style)]')
+        for postry_card in poetry_cards:
+            _id = postry_card.xpath('./div[@class="list_num_info"]/text()').extract_first()
+            href = postry_card.xpath('./div[@class="shici_list_main"]//a/@href').extract_first()
+            meta = {
+                'id': _id.strip(),
+                'category_name': category_name,
+            }
+            scrapy.Request(url=parse.urljoin(response.url, href, ), meta=meta, callback=self.parse_poetry_detail, )
+        next_page_url = response.xpath('//div[@id="list_nav_part"]/a[text()="下一页"]/@href').extract_first()
+        yield scrapy.Request(parse.urljoin(response.url, next_page_url, ), callback=self.parse_poetry_list, )
+
+    def parse_poetry_detail(self, response):
+        _id = response.meta['id']
+        category_name = response.meta['category_name']
+        poetryItem = PoetryItem()
+        poetryItem['id'] = _id
+        poetryItem['title'] = response.xpath('//div[@id="zs_title"]//span[2]//text()').extract_first()
+        content = response.xpath('//div[@id="item_div"]//div[@class="item_content"]/text()').extract()
+        poetryItem['content'] = "".join(content).strip()
+        shangxi_content = response.xpath('//div[@id="item_shangxi"]/div[@class="shangxi_content"]/text()').extract()
+        poetryItem['shangxi_content'] = "".join(shangxi_content).strip()
+        poetryItem['category_name'] = category_name
+        yield poetryItem
 
     def parse_author_list(self, response):
         author_list = response.xpath('//div[@id="main_left"]/div[@class="card zuozhe_card"]')
         for author in author_list:
-            id = author.xpath('./div[@class="list_num_info"]/text()').extract_first()
+            _id = author.xpath('./div[@class="list_num_info"]/text()').extract_first()
             href = author.xpath('./div[@class="zuozhe_list_item"]//a/@href').extract_first()
             meta = {
-                'id': id.strip(),
+                'id': _id.strip(),
             }
-            yield scrapy.Request(url=parse.urljoin(response.url, href), meta=meta, callback=self.parse_author_detail, )
+            yield scrapy.Request(url=parse.urljoin(response.url, href, ), meta=meta,
+                                 callback=self.parse_author_detail, )
 
         next_page_url = response.xpath('//div[@id="list_nav_part"]/a[text()="下一页"]/@href').extract_first()
         if next_page_url is not None:
-            yield scrapy.Request(url=parse.urljoin(response.url, next_page_url), callback=self.parse_author_list, )
+            yield scrapy.Request(url=parse.urljoin(response.url, next_page_url, ), callback=self.parse_author_list, )
 
     def parse_author_detail(self, response):
-        id = response.meta["id"]
+        _id = response.meta["id"]
         about_author = response.xpath('//div[@id="main_right"]/div[@class="card about_zuozhe"]')
         name = about_author.xpath('.//div/h4//text()').extract_first()
         descs = about_author.xpath('.//div[@class="des"]//text()').extract()
@@ -34,6 +73,7 @@ class ShicimingjuSpider(scrapy.Spider):
         take_count = about_author.xpath('.//div[@class="aside_right"]/div[@class="aside_val"]//text()').extract_first()
 
         authorItem = AuthorItem()
+        authorItem['id'] = _id
         authorItem['name'] = name
         authorItem['desc'] = "".join(descs).strip()
         authorItem['dynasty'] = dynasty
