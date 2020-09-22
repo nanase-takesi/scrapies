@@ -20,6 +20,13 @@ USER_AGENTS = [
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
 
+# DUPEFILTER_CLASS = 'scrapy_redis.dupefilter.RFPDupeFilter'
+# SCHEDULER = 'scrapy_redis.scheduler.Scheduler'
+# SCHEDULER_PERSIST = True
+
+# REDIS_HOST = '127.0.0.1'
+# REDIS_PORT = 6379
+
 LOG_LEVEL = 'WARNING'
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
@@ -69,6 +76,7 @@ SPIDER_MIDDLEWARES = {
 ITEM_PIPELINES = {
     'scrapies.pipelines.ScrapiesPipeline': 300,
     'scrapies.pipelines.AuthorPipeline': 300,
+    # 'scrapy_redis.pipelines.RedisPipeline': 300,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
