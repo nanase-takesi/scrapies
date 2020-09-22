@@ -20,14 +20,17 @@ USER_AGENTS = [
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
 
-# DUPEFILTER_CLASS = 'scrapy_redis.dupefilter.RFPDupeFilter'
-# SCHEDULER = 'scrapy_redis.scheduler.Scheduler'
-# SCHEDULER_PERSIST = True
+DUPEFILTER_CLASS = 'scrapy_redis.dupefilter.RFPDupeFilter'
+SCHEDULER = 'scrapy_redis.scheduler.Scheduler'
+SCHEDULER_PERSIST = True
+# SCHEDULER_QUEUE_CLASS = 'scrapy_redis.queue.SpiderPriorityQueue'
+# SCHEDULER_QUEUE_CLASS = 'scrapy_redis.queue.SpiderQueue'
+# SCHEDULER_QUEUE_CLASS = 'scrapy_redis.queue.SpiderStack'
 
-# REDIS_HOST = '127.0.0.1'
-# REDIS_PORT = 6379
+REDIS_HOST = '127.0.0.1'
+REDIS_PORT = 6379
 
-LOG_LEVEL = 'WARNING'
+# LOG_LEVEL = 'WARNING'
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 # CONCURRENT_REQUESTS = 32
