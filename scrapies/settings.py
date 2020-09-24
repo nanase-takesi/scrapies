@@ -27,7 +27,7 @@ SCHEDULER_PERSIST = True
 # SCHEDULER_QUEUE_CLASS = 'scrapy_redis.queue.SpiderQueue'
 # SCHEDULER_QUEUE_CLASS = 'scrapy_redis.queue.SpiderStack'
 
-REDIS_HOST = '127.0.0.1'
+REDIS_HOST = '47.114.42.9'
 REDIS_PORT = 6379
 
 # LOG_LEVEL = 'WARNING'
